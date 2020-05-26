@@ -36,6 +36,7 @@ app.use('/api/user', require('./routes/user.routes'));
 app.use('/api/friend', require('./routes/friend.routes'));
 app.use('/api/voting-table', require('./routes/voting-table.routes'));
 app.use('/api/election', require('./routes/election.routes'));
+app.use('/api/scpl/client', require('./routes/scpl_client.routes'));
 app.use('/api/ping', require('./routes/ping.routes'));
 
 // FOR ANGULAR: Catch all other routes and return the index file
