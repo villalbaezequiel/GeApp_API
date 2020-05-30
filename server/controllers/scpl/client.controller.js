@@ -46,7 +46,7 @@ clientController.fetchClient = async (req, res, next) => {
 clientController.editAvalClient = async (req, res, next) => {
     try{
         const clientId      = req.params.id;
-        const referrerId    = (req.params.referrerId ? req.params.referrerId : 0);
+        const referrerId    = (req.body.referrerId ? req.body.referrerId : 0);
 
         const clientToEdit = await Client.findOne({where: {"id": clientId}});
 
