@@ -108,13 +108,14 @@ userController.resetPassword = async (req, res, next)=>{
         }
 
         if(password !== undefined){
+            userToEdit.resetpassword = true;
             userToEdit.setPassword(password);
-            fieldsObj = {fields: ['salt','hash']};
+            fieldsObj = {fields: ['salt','hash','resetpassword']};
         }
         
         await userToEdit.save(fieldsObj);
 
-        res.json({status: 'Contraseña actualizada con exito.'});
+        res.json({status: 'Se ha enviado un Email para Aprobar el cambio de Contraseña!'});
     }catch(e){
         next(e);
     }

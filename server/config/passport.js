@@ -18,6 +18,10 @@ passport.use(new LocalStrategy({
       return done(null, false, { errors: { 'message': 'Usuario bloqueado.' } });
     }
 
+    if (user.resetpassword) {
+      return done(null, false, { errors: { 'message': 'Debes aprobar el cambio de Contraseña para Ingresar!' } });
+    }
+
     const userCitizen = await Citizen.findOne({
       where: { "nationalId": nationalId },
       include: [{model: Voter, where: { "isOwner": true },

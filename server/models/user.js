@@ -43,6 +43,7 @@ class User extends Sequelize.Model {
       phone: this.phone,
       role: this.role,
       approved: this.approved,
+      resetpassword: this.resetpassword,
       isOwner: this.isOwner,
       token: this.generateJWT()
     };
@@ -59,6 +60,7 @@ User.init({
   helpPhone: {type: Sequelize.STRING, allowNull:true},
   role: {type: Sequelize.STRING, allowNull: false, defaultValue: 'USER'},
   approved: { type: Sequelize.BOOLEAN, allowNull:false, defaultValue: true },
+  resetpassword: { type: Sequelize.BOOLEAN, allowNull: true, defaultValue: false },
   hash: {type: Sequelize.STRING(550), allowNull:false},
   salt: {type: Sequelize.STRING, allowNull: false}
 }, {
