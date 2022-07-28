@@ -24,11 +24,16 @@ votingTableController.getVotingTable = async (req, res, next) => {
         //maybe this is not the best approach.
         const usersVotingTable = await VotingTable.findOne(
             { include: [{ 
-                model: Voter, 
+                model: Voter,
+                //where: {"isOwner": true}, 
                 include: [
                     { model: Citizen, 
                         where: { "nationalId": req.payload.nationalId } 
-                    }] 
+                    }/*,
+                    { model: VotingTable,
+                        where: { "isOpen": true}
+                    }*/
+                    ] 
                 }] 
             });
 
@@ -275,7 +280,7 @@ votingTableController.scrutiny = async (req, res, next) => {
         await Scrutiny.bulkCreate(scrutiniesArr, {transaction});
 
         console.log(`notas: ${notes}`);
-        //votingTable.isOpen = false;
+        votingTable.isOpen = false;
         votingTable.notes = notes; 
         await votingTable.save({transaction});
 
