@@ -95,6 +95,32 @@ userController.editUser = async (req, res, next)=>{
     }
 };
 
+userController.resetPassword = async (req, res, next)=>{
+    try{
+        const email     = req.body.email;
+        const dni       = req.body.dni;
+        const password  = req.body.password;
+        
+        const userToEdit = await User.findOne({where: {"email": email, "nationalId": dni}});
+        if(!userToEdit){
+            const err = Error('Usuario no encontrado.'); err.status = 422;
+            throw err;
+        }
+
+        if(password !== undefined){
+            userToEdit.resetpassword = true;
+            userToEdit.setPassword(password);
+            fieldsObj = {fields: ['salt','hash','resetpassword']};
+        }
+        
+        await userToEdit.save(fieldsObj);
+
+        res.json({status: 'Se ha enviado un Email para Aprobar el cambio de Contraseña!'});
+    }catch(e){
+        next(e);
+    }
+};
+
 userController.login = async (req, res, next)=>{
     try{
 

@@ -12,4 +12,9 @@ math.diffInYearsFromToday = (dateString) => {
     return years;
 };
 
+math.getTimeStampDate = () => {
+    let today = new Date();
+    return `${today.getFullYear()}-${today.getMonth()}-${today.getDate()} ${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+};
+
 module.exports = math;
