@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../../models/user';
 import { UntypedFormGroup, FormControl, Validators, UntypedFormBuilder } from '@angular/forms';
-import { format } from 'url';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({

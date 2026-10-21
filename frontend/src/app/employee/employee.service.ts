@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validator, Validators } from '@angular/forms';
-import { Capability } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
