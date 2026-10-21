@@ -22,7 +22,6 @@
     "database": "geapp_test",
     "host": "localhost",
     "dialect": "mysql",
-    "operatorsAliases": 0,
     "pool":{
       "max":5,
       "min":0,
@@ -38,11 +37,25 @@
     "database": "geapp_prod",
     "host": "localhost",
     "dialect": "mysql",
-    "operatorsAliases": 0, 
     "pool":{
       "max":5,
       "min":0,
       "acquire":30000, 
+      "idle":10000
+    }
+  },
+  "docker": {
+    "jwtsecret": "docker-dev-secret-change-me",
+    "filepath": "/app/uploads",
+    "username": "geapp",
+    "password": "geapp",
+    "database": "geapp",
+    "host": "db",
+    "dialect": "mysql",
+    "pool":{
+      "max":5,
+      "min":0,
+      "acquire":30000,
       "idle":10000
     }
   }

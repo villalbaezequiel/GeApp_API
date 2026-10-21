@@ -7,24 +7,16 @@ import { UserDetailComponent } from './components/user-detail/user-detail.compon
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
 import { UserListFilterComponent } from './components/user-list-filter/user-list-filter.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { MaterialModule } from '../material/material.module';
 import { UserService } from './services/user.service';
 import { HttpErrorInterceptor } from '../common/http-error.interceptor';
 
 
 
-@NgModule({
-  declarations: [UserListComponent, UserDetailComponent, UserListItemComponent, UserListFilterComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    HttpClientModule,
-    UserRoutingModule
-  ],
-  providers: [UserService,  {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}],
-  entryComponents: [UserDetailComponent]
-})
+@NgModule({ declarations: [UserListComponent, UserDetailComponent, UserListItemComponent, UserListFilterComponent], imports: [CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        UserRoutingModule], providers: [UserService, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }, provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class UserModule { }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validator, Validators } from '@angular/forms';
-import { Capability } from 'protractor';
+import { UntypedFormGroup, UntypedFormControl, Validator, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -9,16 +8,16 @@ export class EmployeeService {
 
   constructor() { }
 
-  form: FormGroup = new FormGroup({
-    $key:new FormControl(null),
-    first:new FormControl('', [Validators.required, Validators.minLength(8)]),
-    email:new FormControl('', Validators.email),
+  form: UntypedFormGroup = new UntypedFormGroup({
+    $key:new UntypedFormControl(null),
+    first:new UntypedFormControl('', [Validators.required, Validators.minLength(8)]),
+    email:new UntypedFormControl('', Validators.email),
      
-    approved:new FormControl(false),
-    department:new FormControl('2'),
-    gender: new FormControl('1'),
-    hireDate: new FormControl(''), 
-    isPermanent:new FormControl(false),
+    approved:new UntypedFormControl(false),
+    department:new UntypedFormControl('2'),
+    gender: new UntypedFormControl('1'),
+    hireDate: new UntypedFormControl(''), 
+    isPermanent:new UntypedFormControl(false),
   });
 
  intializeFormGroup(){

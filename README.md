@@ -1,4 +1,93 @@
 # GEAPP (w)
+
+## STACK
+- Backend: Node.js >= 22, Express 5, Sequelize 6 + mysql2 3, JWT (express-jwt 8 / jsonwebtoken 9), passport 0.7, multer 2.
+- Frontend: Angular 22 + Angular Material 22 (componentes MDC), TypeScript 6, RxJS 7. Builder `application` (esbuild).
+- DB: MySQL 8.
+
+## DOCKER (forma mas rapida de probar todo)
+Requiere Docker. Levanta MySQL 8 + la app (backend + frontend compilado de `frontend/dist`) en http://localhost:3000.
+
+```
+docker compose up -d --build     # app + db. Las tablas se crean solas (DB_SYNC=true)
+docker compose exec app npm run seed   # datos demo (idempotente)
+docker compose logs -f app       # logs
+docker compose down              # apagar (conserva datos)
+docker compose down -v           # apagar y BORRAR datos (reset total, hay que volver a correr seed)
+```
+- Usa `NODE_ENV=docker` (bloque `docker` en `server/config/config.json`; host `db`, user/pass `geapp`). El `jwtsecret` de ese bloque es solo para desarrollo.
+- Los archivos subidos (actas) quedan en el volumen `uploads` (`/app/uploads`).
+- Si cambias el frontend: `cd frontend && npm ci && npx ng build --configuration production` (genera `frontend/dist/frontend`; el backend lo sirve desde ahi) y despues `docker compose up -d --build`.
+
+### Datos demo (`npm run seed`)
+| Que | Valor |
+|---|---|
+| Admin | DNI `admin` / pass `admin1234` (rol ADMIN) |
+| Fiscal (owner de la mesa) | DNI `2001` (padron). Se crea el usuario por API (`POST /api/user`) |
+| Votantes de la mesa | DNI `2002`, `2003` |
+| Eleccion activa | "Eleccion Demo" con categoria Intendente y Partido A / B |
+| Config | `DEFAULT_HELP_PHONE` |
+
+## VALIDAR TODOS LOS ENDPOINTS
+La coleccion Postman versionada en `docs/geapp.postman_collection.json` es a la vez **documentacion** (descripcion, auth y errores esperados por request) y **suite de validacion** (cada request tiene asserts; guarda tokens e ids en variables).
+
+Con el stack docker arriba y con seed:
+```
+npx newman run docs/geapp.postman_collection.json
+# contra otro host:
+npx newman run docs/geapp.postman_collection.json --env-var baseUrl=http://otro-host:3000
+```
+Resultado esperado: 23 requests, 30 assertions, 0 failed. Tambien se puede importar en Postman (Import > File) y correr con el Runner.
+
+- La corrida **cierra la mesa demo** (el ultimo paso carga el escrutinio). Para repetirla: `docker compose down -v && docker compose up -d --build && docker compose exec app npm run seed`.
+- NO correrla contra produccion: crea usuarios y cierra mesas.
+- Si la DB tarda en estar lista, esperar al log `DB sync done.` antes del seed.
+
+### Endpoints
+| Metodo y ruta | Auth | Descripcion |
+|---|---|---|
+| `GET /api/ping` | no | healthcheck |
+| `GET /api/election/` | no | eleccion activa + categorias + partidos |
+| `POST /api/user/` | no | crear usuario (DNI debe estar en padron) |
+| `POST /api/user/login` | no | login, devuelve JWT |
+| `POST /api/user/reset-password` | no | solicitar cambio de password (`email`, `dni`, `password`) |
+| `GET /api/user?q=&page=` | si | listado paginado (25) |
+| `GET /api/user/:id` | si | USER: propio; ADMIN: cualquiera |
+| `PUT /api/user/:id` | ADMIN | `approved`, `password` |
+| `DELETE /api/user/:id` | no | dummy (no borra) |
+| `GET/POST /api/friend/`, `DELETE /api/friend/:id` | si | amigos del usuario |
+| `GET /api/voting-table/` | si | mesa del usuario con votantes |
+| `PUT /api/voting-table/vote/:voterId` | owner | marcar voto |
+| `PUT /api/voting-table/replenish/:qty` | owner | reposicion de boletas |
+| `POST /api/voting-table/scrutiny/file` | owner | acta (multipart `scrutinyImage`, JPG/PNG <= 20MB) |
+| `POST /api/voting-table/scrutiny` | owner | escrutinio final, cierra la mesa |
+| `/api/scpl/client` (GET, GET/:id, PUT/:id, POST /fetch, DELETE/:id) | si | modulo SCPL; solo el listado esta en la coleccion |
+
+Auth = header `Authorization: Bearer <token>`. Errores: `{ "errors": { "message", "error" } }` con 401 / 403 / 422.
+
+## UPGRADE REALIZADO (rama `upgrade-deps`)
+**Backend**
+- Express 4 -> 5 (la ruta catch-all del SPA ahora es `/{*splat}`), Sequelize 5 -> 6, express-jwt 5 -> 8, jsonwebtoken 8 -> 9, mysql2 1 -> 3, passport 0.4 -> 0.7, multer 1 -> 2, nodemon 1 -> 3.
+- express-jwt 8: `const { expressjwt } = require('express-jwt')`, `algorithms: ['HS256']` obligatorio, `requestProperty: 'payload'` (antes `userProperty`), `isRevoked` async `(req, token)` que lanza error en vez de usar callback.
+- Se quito `operatorsAliases` de `config.json` (Sequelize 6 no lo soporta).
+- `dateformat` queda en 4.x (la 5 es solo ESM).
+- Nuevo: ambiente `docker`, `DB_SYNC=true` (crea tablas), `npm run seed`, `npm start`.
+
+**Frontend (Angular 8 -> 22, paso a paso por cada major)**
+- Componentes Angular Material legacy migrados a MDC (`ng generate @angular/material:mdc-migration`). Cambia el look de formularios, tablas y botones: revisar visualmente.
+- TypeScript 6: `strict: false` explicito (el codigo no es strict); se quito `baseUrl` (imports `src/...` via `paths`).
+- Builder `@angular-devkit/build-angular:application`, salida en `dist/frontend` (`outputPath.browser = ""`).
+- Eliminados: protractor, tslint, codelyzer, jwt-decode. Karma usa `karma-coverage`.
+- Para migrar versiones viejas hizo falta Node 16 en los saltos 12 a 16 (bug de `exports` de Node con compiler-cli). Con Node 22+ el build actual funciona.
+
+**Pendiente / conocido**
+- 6 de 21 specs de `ng test` fallan (specs de scaffold sin imports de Material).
+- `styles.scss` usa `mat.m2-define-light-theme`: warning de Material, no bloquea.
+- `server/controllers/voting-table.controller.js`: `req.body.notes | ''` usa OR de bits (deberia ser `||`), por eso las notas del escrutinio no se guardan.
+- `server/config/config.json` tiene credenciales/secretos versionados: moverlos a variables de entorno.
+- Schema SQL generado desde los modelos en `db/schema.sql` (11 tablas, MySQL 8). No es un dump de la DB real: compararlo con `mysqldump --no-data` de EC2.
+- La DB real solo tiene migraciones para `users` y `friends`; el resto de las tablas se crean con `sequelize.sync()` (DB_SYNC).
+
 ## EJECUTAR APP EN AMBIENTE DE PRODUCCION Y LOCAL
 ### AMBIENTE LOCAL / DESARROLLO
 - RUN BACKEND SERVER port 3000 (sin nodemon): `node server/app.js`
@@ -18,7 +107,7 @@
 
 ## A MEJORAR: 
 - Bug en FE: No se está refrescando la lista cuando se modifica un usuario.
-- Deploy a prod: correr `ng build --prod` y esto generará el codigo en `/frontend/dist/frontend` 
+- Deploy a prod: correr `ng build --configuration production` y esto generará el codigo en `/frontend/dist/frontend` 
 - Se debe copiar todo el contenido de esta carpeta al directorio en el server que se va a encontrar una carpeta analoga.
 - Tener presente que todo el codigo va a estar compilado usando la configuracion de `environments.prod.js` por lo que va a apuntar a la url de produccion. (en este momento el FE del ambiente de test y prod están apuntando a prod)
 

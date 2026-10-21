@@ -4,9 +4,11 @@ http://mcg.mbitson.com/#!?primary=%23717ed3&accent=%2340bef7
 #40bef7
 #717ed3
 */
+@use '@angular/material' as mat;
 
-@import '~@angular/material/theming';
-@include mat-core();
+@include mat.all-component-typographies();
+@include mat.elevation-classes();
+@include mat.app-background();
 $mat-myapp-primary: (
     50 : #eef0fa,
     100 : #d4d8f2,
@@ -73,12 +75,12 @@ $mat-myapp-accent: (
     )
 );
 
-$primary: mat-palette($mat-myapp-primary);
-$accent: mat-palette($mat-myapp-accent);
+$primary: mat.m2-define-palette($mat-myapp-primary);
+$accent: mat.m2-define-palette($mat-myapp-accent);
 
-$theme: mat-light-theme($primary, $accent);
-@include angular-material-theme($theme);
-//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+$theme: mat.m2-define-light-theme($primary, $accent);
+@include mat.all-component-themes($theme);
+//@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 /*------------------------------------------*/
 
@@ -155,15 +157,27 @@ mat-footer-row mat-footer-cell{
           border-radius: 5px;
           }
 
+/*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
 .search-form-field div.mat-form-field-underline {
               display: none;
           }
+/*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
 .search-form-field div.mat-form-field-infix{
               border-top: 0px;
           }
+/*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
 .search-form-field div.mat-form-field-wrapper{
             padding-bottom: 0px;
         }
+/*
+TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+*/
 .search-form-field div.mat-form-field-suffix button{
             height: 32px;
             width: 32px;
