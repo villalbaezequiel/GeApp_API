@@ -7,7 +7,7 @@ import { UserDetailComponent } from './components/user-detail/user-detail.compon
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
 import { UserListFilterComponent } from './components/user-list-filter/user-list-filter.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { MaterialModule } from '../material/material.module';
 import { UserService } from './services/user.service';
 import { HttpErrorInterceptor } from '../common/http-error.interceptor';
@@ -18,5 +18,5 @@ import { HttpErrorInterceptor } from '../common/http-error.interceptor';
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        UserRoutingModule], providers: [UserService, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }, provideHttpClient(withInterceptorsFromDi())] })
+        UserRoutingModule], providers: [UserService, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }, provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class UserModule { }

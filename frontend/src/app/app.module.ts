@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from "./material/material.module";
 
 import { NgModule } from '@angular/core';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +27,6 @@ import { HttpErrorInterceptor } from "./common/http-error.interceptor";
         FormsModule,
         AppRoutingModule], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ] })
 export class AppModule { }

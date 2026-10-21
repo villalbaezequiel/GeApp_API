@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 import { MatDialogRef } from "@angular/material/dialog";
 
@@ -6,6 +6,7 @@ import { MatDialogRef } from "@angular/material/dialog";
     selector: 'app-employee',
     templateUrl: './employee.component.html',
     styleUrls: ['./employee.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EmployeeComponent implements OnInit {

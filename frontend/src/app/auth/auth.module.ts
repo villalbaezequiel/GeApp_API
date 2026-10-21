@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { AuthRoutingModule } from './auth-routing.module'; 
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
@@ -12,5 +12,5 @@ import { MaterialModule } from '../material/material.module';
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AuthRoutingModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        AuthRoutingModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class AuthModule { }

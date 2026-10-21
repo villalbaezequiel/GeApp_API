@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,6 +10,7 @@ import { EmployeeComponent } from '../employee/employee.component';
     selector: 'app-employee-list',
     templateUrl: './employee-list.component.html',
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EmployeeListComponent implements OnInit {
