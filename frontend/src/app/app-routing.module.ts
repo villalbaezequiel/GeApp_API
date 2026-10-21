@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, CanActivate } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { TermsAndConditionsComponent } from './components/pages/terms-and-conditions/terms-and-conditions.component';
 import { PageNotFoundComponent } from './components/pages/page-not-found/page-not-found.component';
 
