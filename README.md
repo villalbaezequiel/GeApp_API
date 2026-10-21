@@ -85,6 +85,7 @@ Auth = header `Authorization: Bearer <token>`. Errores: `{ "errors": { "message"
 - `styles.scss` usa `mat.m2-define-light-theme`: warning de Material, no bloquea.
 - `server/controllers/voting-table.controller.js`: `req.body.notes | ''` usa OR de bits (deberia ser `||`), por eso las notas del escrutinio no se guardan.
 - `server/config/config.json` tiene credenciales/secretos versionados: moverlos a variables de entorno.
+- Schema SQL generado desde los modelos en `db/schema.sql` (11 tablas, MySQL 8). No es un dump de la DB real: compararlo con `mysqldump --no-data` de EC2.
 - La DB real solo tiene migraciones para `users` y `friends`; el resto de las tablas se crean con `sequelize.sync()` (DB_SYNC).
 
 ## EJECUTAR APP EN AMBIENTE DE PRODUCCION Y LOCAL
