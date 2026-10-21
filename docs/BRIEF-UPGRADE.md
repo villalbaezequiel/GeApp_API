@@ -8,6 +8,7 @@ Se actualizaron backend y frontend a las ultimas versiones estables, se agrego D
 Resultado verificado:
 - Backend arranca y responde en Docker (MySQL 8) y en local.
 - `npx newman run docs/geapp.postman_collection.json`: 23 requests, 30 assertions, 0 fallos (contra Docker con seed).
+- `db/schema.sql` carga en una base MySQL 8 vacia (11 tablas).
 - Frontend compila (`ng build`, desarrollo y produccion) y el backend lo sirve desde `frontend/dist/frontend`.
 
 No verificado:
@@ -110,6 +111,14 @@ Notas:
 - El healthcheck de MySQL usa `127.0.0.1` (TCP). Con `localhost` MySQL respondia "healthy" durante su init temporal (sin red) y el primer `sync` de la app fallaba con `ECONNREFUSED`.
 - Uploads en el volumen `uploads`; datos en `db_data`.
 
+## 5b. Schema SQL (`db/schema.sql`)
+No existia un schema completo en el repo (sin `CREATE TABLE` en ningun archivo; migraciones solo para `users` y `friends`). Se genero `db/schema.sql` desde los modelos Sequelize:
+- Levantar Docker, dejar que `sequelize.sync()` cree las tablas y volcar con `mysqldump --no-data` (11 tablas: citizens, configs, elections, friends, scpl_clients, scrutinies, scrutinycategories, scrutinyparties, users, voters, votingtables).
+- Verificado: carga limpia en una base MySQL 8 vacia crea las 11 tablas y sus claves foraneas.
+- Requiere MySQL 8 (collation `utf8mb4_0900_ai_ci`). Desactiva `FOREIGN_KEY_CHECKS` durante la carga porque las tablas salen en orden alfabetico.
+- No incluye `my_temp` (la usa `db/process_lines.sql`; esta como comentario con definicion supuesta `VARCHAR(500)`) ni el stored procedure.
+- No es un dump de la DB real de EC2: puede diferir en indices y tipos. Para comparar: `mysqldump --no-data --routines -h <host> -u <user> -p geapp_prod > real.sql` y `diff` contra `db/schema.sql`.
+
 ## 6. Postman: documentacion y validacion
 La coleccion original (link getpostman) no alcanza como documentacion: mezcla hosts (`localhost`, `api.geapp.com.ar`, puertos 80/3000/3032), tiene requests deprecados, ids hardcodeados, sin descripciones, sin asserts, y faltaban `reset-password` y el modulo SCPL.
 
@@ -129,7 +138,7 @@ Se creo `docs/geapp.postman_collection.json`:
 6. **Bug previo**: `DELETE /api/user/:id` es un dummy y no requiere auth.
 7. **Bug previo**: en `routes/auth.js`, `verifyApproved` no se usa y tiene un `throw` faltante.
 8. **Deploy en EC2**: instalar Node >= 22 (el README viejo indica Node 12), reconstruir con `npm ci`, y actualizar el `pm2`. Angular 22 requiere Node >= 22.22 solo para compilar el frontend, no para ejecutar el backend.
-9. **Migraciones**: solo existen para `users` y `friends`; el resto depende de `sequelize.sync()`. Conviene escribir migraciones reales antes de cambiar el esquema.
+9. **Migraciones y schema**: solo existen migraciones para `users` y `friends`; el resto depende de `sequelize.sync()`. `db/schema.sql` sale de los modelos, no de la DB real: volcar y comparar el schema de EC2 y luego escribir migraciones reales antes de cambiar el esquema.
 10. **Mejoras opcionales**: pasar a `mat.theme` (Material 3) para quitar el warning de `define-light-theme`; eliminar dependencias backend sin uso; leer secretos de `process.env`.
 
 ## 8. Commits
@@ -139,6 +148,8 @@ Se creo `docs/geapp.postman_collection.json`:
 1da9885 chore(frontend): fix build on Angular 22 / TS 6, drop dead deps
 7dd4887 chore(frontend): application builder, rebuild dist, fix karma config
 941e0b4 feat: docker, seed, postman collection as docs/validation, README update
+e695434 docs: add upgrade brief
+3540669 docs(db): add schema.sql generated from Sequelize models
 ```
 
 ## 9. Como volver atras
