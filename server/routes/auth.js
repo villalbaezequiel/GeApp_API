@@ -1,4 +1,4 @@
-var jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 const User = require('../models/user');
@@ -13,29 +13,31 @@ function getTokenFromHeader(req) {
     return null;
 }
 
-var isRevokedCallback = async function(req, payload, done){
-    var nationalId = payload.nationalId;
+var isRevokedCallback = async function(req, token){
+    var nationalId = token.payload.nationalId;
     const user =  await User.findOne({ where: { "nationalId": nationalId } });
     
     if(!user || !user.approved){
         const err = Error('Usuario inactivo.'); err.status=401;
-        return done(err);
+        throw err;
     }
 
-    return done(null);
+    return false;
 
   };
 
 var auth = {
     required: jwt({
         secret: config.jwtsecret,
-        userProperty: 'payload',
+        algorithms: ['HS256'],
+        requestProperty: 'payload',
         getToken: getTokenFromHeader,
         isRevoked: isRevokedCallback
     }),
     optional: jwt({
         secret: config.jwtsecret,
-        userProperty: 'payload',
+        algorithms: ['HS256'],
+        requestProperty: 'payload',
         credentialsRequired: false,
         getToken: getTokenFromHeader
     })

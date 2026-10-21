@@ -22,7 +22,6 @@
     "database": "geapp_test",
     "host": "localhost",
     "dialect": "mysql",
-    "operatorsAliases": 0,
     "pool":{
       "max":5,
       "min":0,
@@ -38,7 +37,6 @@
     "database": "geapp_prod",
     "host": "localhost",
     "dialect": "mysql",
-    "operatorsAliases": 0, 
     "pool":{
       "max":5,
       "min":0,
