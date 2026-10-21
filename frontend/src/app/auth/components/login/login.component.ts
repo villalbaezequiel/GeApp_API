@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../../models/user';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, FormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { format } from 'url';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -13,11 +13,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router:Router, private fb: FormBuilder) { }
+  constructor(private authService: AuthService, private router:Router, private fb: UntypedFormBuilder) { }
   
-  loginForm:FormGroup;
+  loginForm:UntypedFormGroup;
   
-  myValidator(form:FormGroup){
+  myValidator(form:UntypedFormGroup){
     return true;
   }
 

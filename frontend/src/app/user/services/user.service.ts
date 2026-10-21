@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
 import { filter } from 'rxjs/operators';
 import { List } from 'src/app/models/list';
@@ -24,18 +24,18 @@ export class UserService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   //TODO: this form might be on the component and the data must be sent through the dialog.
-  form: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    nationalId: new FormControl({value:'', disabled:true}, Validators.required),
-    first: new FormControl({value:'', disabled:true}, Validators. required),
-    last: new FormControl({value:'', disabled:true}),
-    password: new FormControl(''),
-    email: new FormControl({value:'', disabled:true}),
-    phone: new FormControl({value:'', disabled:true}),
-    helpPhone: new FormControl({value:'', disabled:true}),
-    role: new FormControl({value:'', disabled:true}),
-    createdAt: new FormControl({value:'', disabled:true}),
-    approved: new FormControl(false)
+  form: UntypedFormGroup = new UntypedFormGroup({
+    id: new UntypedFormControl(null),
+    nationalId: new UntypedFormControl({value:'', disabled:true}, Validators.required),
+    first: new UntypedFormControl({value:'', disabled:true}, Validators. required),
+    last: new UntypedFormControl({value:'', disabled:true}),
+    password: new UntypedFormControl(''),
+    email: new UntypedFormControl({value:'', disabled:true}),
+    phone: new UntypedFormControl({value:'', disabled:true}),
+    helpPhone: new UntypedFormControl({value:'', disabled:true}),
+    role: new UntypedFormControl({value:'', disabled:true}),
+    createdAt: new UntypedFormControl({value:'', disabled:true}),
+    approved: new UntypedFormControl(false)
   });
 
   initFormGroup() {
