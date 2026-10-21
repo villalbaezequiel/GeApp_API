@@ -75,6 +75,15 @@ const user = new User();
 user.save();
 */
 
+// Creates missing tables. Opt-in (DB_SYNC=true), used by the docker environment.
+if (process.env.DB_SYNC === 'true') {
+  sequelize.sync().then(() => {
+    console.log('DB sync done.');
+  }).catch((e) => {
+    console.error('DB sync failed: ' + e);
+  });
+}
+
 /*
 db.sequelize.sync().then(() => {
   console.log('DB has been set up succesfully.');
