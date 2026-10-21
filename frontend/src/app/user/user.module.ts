@@ -15,16 +15,15 @@ import { HttpErrorInterceptor } from '../common/http-error.interceptor';
 
 
 @NgModule({
-  declarations: [UserListComponent, UserDetailComponent, UserListItemComponent, UserListFilterComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    HttpClientModule,
-    UserRoutingModule
-  ],
-  providers: [UserService,  {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}],
-  entryComponents: [UserDetailComponent]
+    declarations: [UserListComponent, UserDetailComponent, UserListItemComponent, UserListFilterComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        HttpClientModule,
+        UserRoutingModule
+    ],
+    providers: [UserService, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }]
 })
 export class UserModule { }

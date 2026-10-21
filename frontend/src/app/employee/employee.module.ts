@@ -11,15 +11,14 @@ import { EmployeeService } from './employee.service';
 
 
 @NgModule({
-  declarations: [EmployeesComponent, EmployeeComponent, EmployeeListComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    EmployeeRoutingModule
-  ],
-  providers: [EmployeeService],
-  entryComponents: [EmployeeComponent]
+    declarations: [EmployeesComponent, EmployeeComponent, EmployeeListComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        EmployeeRoutingModule
+    ],
+    providers: [EmployeeService]
 })
 export class EmployeeModule { }
