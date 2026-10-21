@@ -6,10 +6,10 @@ import { PageNotFoundComponent } from './components/pages/page-not-found/page-no
 const routes: Routes = [
   //{path: '', redirectTo: '/auth/login', pathMatch: 'full'},
   {path: '', redirectTo: '/users', pathMatch: 'full'},
-  {path:'auth', loadChildren: './auth/auth.module#AuthModule'},
-  {path:'users', loadChildren: './user/user.module#UserModule'},
+  {path:'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
+  {path:'users', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
   {path: 'tyc', component: TermsAndConditionsComponent},
-  {path: 'employees', loadChildren: './employee/employee.module#EmployeeModule'},
+  {path: 'employees', loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule)},
   {path: '**', component: PageNotFoundComponent}
 ];
 
