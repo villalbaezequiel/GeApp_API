@@ -7,9 +7,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeComponent } from '../employee/employee.component';
 
 @Component({
-  selector: 'app-employee-list',
-  templateUrl: './employee-list.component.html',
-  styles: []
+    selector: 'app-employee-list',
+    templateUrl: './employee-list.component.html',
+    styles: [],
+    standalone: false
 })
 export class EmployeeListComponent implements OnInit {
 

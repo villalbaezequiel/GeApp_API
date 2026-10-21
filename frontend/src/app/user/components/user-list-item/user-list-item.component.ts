@@ -4,9 +4,10 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user-list-item',
-  templateUrl: './user-list-item.component.html',
-  styleUrls: ['./user-list-item.component.scss']
+    selector: 'app-user-list-item',
+    templateUrl: './user-list-item.component.html',
+    styleUrls: ['./user-list-item.component.scss'],
+    standalone: false
 })
 export class UserListItemComponent implements OnInit {
   @Input() user:User;

@@ -1,9 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-user-list-filter',
-  templateUrl: './user-list-filter.component.html',
-  styleUrls: ['./user-list-filter.component.scss']
+    selector: 'app-user-list-filter',
+    templateUrl: './user-list-filter.component.html',
+    styleUrls: ['./user-list-filter.component.scss'],
+    standalone: false
 })
 export class UserListFilterComponent implements OnInit {
   

@@ -6,9 +6,10 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
-  selector: 'app-user-detail',
-  templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.scss']
+    selector: 'app-user-detail',
+    templateUrl: './user-detail.component.html',
+    styleUrls: ['./user-detail.component.scss'],
+    standalone: false
 })
 export class UserDetailComponent implements OnInit {
   user:User;

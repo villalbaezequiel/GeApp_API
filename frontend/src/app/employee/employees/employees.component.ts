@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../employee.service';
 
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+    selector: 'app-employees',
+    templateUrl: './employees.component.html',
+    styleUrls: ['./employees.component.scss'],
+    standalone: false
 })
 export class EmployeesComponent implements OnInit {
 
