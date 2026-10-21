@@ -90,10 +90,10 @@ $mat-myapp-accent: (
     )
 );
 
-$primary: mat.define-palette($mat-myapp-primary);
-$accent: mat.define-palette($mat-myapp-accent);
+$primary: mat.m2-define-palette($mat-myapp-primary);
+$accent: mat.m2-define-palette($mat-myapp-accent);
 
-$theme: mat.define-light-theme($primary, $accent);
+$theme: mat.m2-define-light-theme($primary, $accent);
 /*
 TODO(mdc-migration): Remove all-legacy-component-themes once all legacy components are migrated
 */
